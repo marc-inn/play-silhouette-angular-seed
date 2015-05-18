@@ -1,4 +1,5 @@
 {
+  "globalstrict": true,
   "node": true,
   "browser": true,
   "esnext": true,
@@ -19,6 +20,15 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
+    "angular": false,
+    "browser": false,
+    "element": false,
+    "by": false,
+    "describe": false,
+    "beforeEach": false,
+    "it": false,
+    "expect": false
   }
 }
+
+

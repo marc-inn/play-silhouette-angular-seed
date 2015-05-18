@@ -5,17 +5,17 @@
 /**
  * The home controller.
  */
-app.controller('HomeCtrl', ['$rootScope', '$scope', '$alert', 'UserFactory', function($rootScope, $scope, $alert, UserFactory) {
+app.controller('HomeCtrl', ['$rootScope', '$scope', '$alert', 'UserFactory', function ($rootScope, $scope, $alert, UserFactory) {
 
   /**
    * Initializes the controller.
    */
-  $scope.init = function() {
+  $scope.init = function () {
     UserFactory.get()
-      .success(function(data) {
+      .success(function (data) {
         $rootScope.user = data;
       })
-      .error(function(error) {
+      .error(function (error) {
         $alert({
           content: error.message,
           animation: 'fadeZoomFadeDown',

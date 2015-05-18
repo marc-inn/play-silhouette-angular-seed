@@ -5,12 +5,12 @@
 /**
  * The sign out controller.
  */
-app.controller('SignOutCtrl', ['$auth', '$alert', function($auth, $alert) {
+app.controller('SignOutCtrl', ['$auth', '$alert', function ($auth, $alert) {
   if (!$auth.isAuthenticated()) {
     return;
   }
   $auth.logout()
-    .then(function() {
+    .then(function () {
       $alert({
         content: 'You have been logged out',
         animation: 'fadeZoomFadeDown',

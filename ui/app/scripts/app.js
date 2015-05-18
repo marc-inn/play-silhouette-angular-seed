@@ -6,6 +6,11 @@
 var app = angular.module('uiApp', [
   'ngResource',
   'ngMessages',
+  'ngRoute',
+  'phonecatAnimations',
+  'phonecatControllers',
+  'phonecatFilters',
+  'phonecatServices',
   'ui.router',
   'mgcrea.ngStrap',
   'satellizer'
@@ -14,7 +19,7 @@ var app = angular.module('uiApp', [
 /**
  * The run configuration.
  */
-app.run(function($rootScope) {
+app.run(function ($rootScope) {
 
   /**
    * The user data.
@@ -31,17 +36,28 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
 
   $urlRouterProvider
     .when('', 'signIn')
-    .when('/', 'signIn');
+    .when('/', 'signIn')
+    .when('/phones', {
+      templateUrl: 'partials/phone-list.html',
+      controller: 'PhoneListCtrl'
+    })
+    .when('/phones/:phoneId', {
+      templateUrl: 'partials/phone-detail.html',
+      controller: 'PhoneDetailCtrl'
+    })
+    .otherwise({
+      redirectTo: '/phones'
+    });
 
   $stateProvider
-    .state('home', { url: '/home', templateUrl: '/views/home.html' })
-    .state('signUp', { url: '/signUp', templateUrl: '/views/signUp.html' })
-    .state('signIn', { url: '/signIn', templateUrl: '/views/signIn.html' })
-    .state('signOut', { url: '/signOut', template: null,  controller: 'SignOutCtrl' });
+    .state('home', {url: '/home', templateUrl: '/views/home.html'})
+    .state('signUp', {url: '/signUp', templateUrl: '/views/signUp.html'})
+    .state('signIn', {url: '/signIn', templateUrl: '/views/signIn.html'})
+    .state('signOut', {url: '/signOut', template: null, controller: 'SignOutCtrl'});
 
-  $httpProvider.interceptors.push(function($q, $injector) {
+  $httpProvider.interceptors.push(function ($q, $injector) {
     return {
-      request: function(request) {
+      request: function (request) {
         var $auth = $injector.get('$auth');
         if ($auth.isAuthenticated()) {
           request.headers['X-Auth-Token'] = $auth.getToken();
@@ -50,7 +66,7 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
         return request;
       },
 
-      responseError: function(rejection) {
+      responseError: function (rejection) {
         if (rejection.status === 401) {
           $injector.get('$state').go('signIn');
         }
@@ -59,7 +75,7 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
     };
   });
 
-  // Auth config
+// Auth config
   $authProvider.httpInterceptor = true; // Add Authorization header to HTTP request
   $authProvider.loginOnSignup = true;
   $authProvider.loginRedirect = '/home';
@@ -73,7 +89,7 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
   $authProvider.tokenPrefix = 'satellizer'; // Local Storage name prefix
   $authProvider.authHeader = 'X-Auth-Token';
 
-  // Facebook
+// Facebook
   $authProvider.facebook({
     clientId: '1503078423241610',
     url: '/authenticate/facebook',
@@ -84,10 +100,10 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
     requiredUrlParams: ['display', 'scope'],
     display: 'popup',
     type: '2.0',
-    popupOptions: { width: 481, height: 269 }
+    popupOptions: {width: 481, height: 269}
   });
 
-  // Google
+// Google
   $authProvider.google({
     clientId: '526391676642-nbnoavs078shhti3ruk8jhl4nenv0g04.apps.googleusercontent.com',
     url: '/authenticate/google',
@@ -100,13 +116,13 @@ app.config(function ($urlRouterProvider, $stateProvider, $httpProvider, $authPro
     optionalUrlParams: ['display'],
     display: 'popup',
     type: '2.0',
-    popupOptions: { width: 580, height: 400 }
+    popupOptions: {width: 580, height: 400}
   });
 
-  // Twitter
+// Twitter
   $authProvider.twitter({
     url: '/authenticate/twitter',
     type: '1.0',
-    popupOptions: { width: 495, height: 645 }
+    popupOptions: {width: 495, height: 645}
   });
 });
